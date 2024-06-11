@@ -1,4 +1,10 @@
-document.getElementById('pasteArea').addEventListener('paste', function (event) {
+document.addEventListener('paste', function (event) {
+  // 現在フォーカスされている要素を取得
+  var activeElement = document.activeElement;
+  if(activeElement.id === 'wish'){
+    return;
+  }
+
   const items = event.clipboardData.items;
   for (let i = 0; i < items.length; i++) {
     if (items[i].kind === 'file' && items[i].type.startsWith('image/')) {

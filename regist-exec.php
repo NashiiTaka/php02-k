@@ -1,17 +1,11 @@
 <?php
-session_start();
-if($_SESSION['user_id']){
-  header('Location: ./index.php');
-  return;
-}
-
-require './DbManager.php';
+require_once './DbManager.php';
+require_once './funcs.php';
+require_once './funcs_mail.php';
 
 // ポストデータを変数化
 $mail = trim($_POST['email']);
 $password = trim($_POST['password']);
-$gender = trim($_POST['gender']);
-$birth_date = trim($_POST['birth_date']);
 
 // エラーチェック、とりあえず空白チェックくらい
 $errorMsg = '';
@@ -31,7 +25,7 @@ if (!$errorMsg) {
     );
 
     if (count($ret)) {
-      $errorMsg .= '指定されたメールアドレスはすでに登録されています。';
+      $errorMsg .= '登録に失敗しました。';
     }
   } catch (Exception $e) {
     $errorMsg .= $e->getMessage();
@@ -43,12 +37,10 @@ $lastInsertedId = null;
 if (!$errorMsg) {
   try {
     $db->insertOrUpdate(
-      'INSERT INTO t_users (mail, password, gender, birth_date) VALUES(:mail, :password, :gender, :birth_date)',
+      'INSERT INTO t_users (mail, password) VALUES(:mail, :password)',
       [
         new DbParam('mail', $mail, PDO::PARAM_STR),
         new DbParam('password', password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR),
-        new DbParam('gender', $gender, PDO::PARAM_STR),
-        new DbParam('birth_date', $birth_date, PDO::PARAM_STR)
       ]
     );
 
@@ -58,14 +50,21 @@ if (!$errorMsg) {
   }
 }
 
-// ログイン処理を実行する
-$_SESSION['user_id'] = $lastInsertedId;
-
 // エラーがあった場合は、元のページに戻す。
-if($errorMsg){
-  header('Location: ./regist.php?err=' . urlencode($errorMsg));
-}else{
-  header('Location: ./index.php');
-}
+if ($errorMsg) {
+  redirect('./regist.php?err=' . urlencode($errorMsg));
+} else {
+  sendMailAdmin(
+    $mail,
+    '',
+    'ユーザー登録申請内容を確認します',
+    "$mail 様
 
+おかサポ管理者です。
+
+登録内容を確認し、問題がない場合は
+ユーザー登録処理の完了後にメールでご連絡差し上げます。"
+  );
+  redirect('./thanks-regist.php');
+}
 ?>

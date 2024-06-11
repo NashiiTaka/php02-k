@@ -1,5 +1,5 @@
 <?php
-session_start();
-session_destroy();
-header('Location: ./index.php');
+require_once './funcs.php';
+logout(true);
+redirect('./login.php');
 ?>

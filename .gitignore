@@ -2,5 +2,5 @@
 .DS_Store
 node_modules
 .production.env
-css/output.css
-css/output.css
+
+
