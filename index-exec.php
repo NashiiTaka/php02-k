@@ -1,5 +1,7 @@
 <?php
 require_once './DbManager.php';
+require_once './funcs.php';
+require_once './funcs_mail.php';
 
 $errorMsgs = [];
 
@@ -96,12 +98,25 @@ INSERT INTO t_reqs(
 
 // エラーがあった場合は、元のページに戻す。
 if (!empty($errorMsgs)) {
-  header('Location: ./index.php?err=y');
   session_start();
   $_SESSION['errMes'] = join('<br />', $errorMsgs);
   foreach($_POST as $key => $value){
     $_SESSION[$key] = $value;
   }
+  redirect('./index.php?err=y');
 } else {
-  header('Location: ./thanks.php');
+  sendMailService(
+    $email,
+    '',
+    'ご要望ありがとうございました',
+"$email 様
+
+ご要望ありがとうございました。
+ご満足いただける商品が見つかるよう、調査いたします！
+
+調査が終わりましたら改めてご連絡差し上げます。
+ご連絡までしばしおまち下さいませ。
+"
+  );
+  redirect('./thanks.php');
 }
