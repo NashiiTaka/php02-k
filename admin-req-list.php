@@ -7,6 +7,7 @@ $db = new DbManager();
 
 $reqs = $db->select("SELECT * FROM t_reqs ORDER BY updated_at DESC");
 
+$title = 'おかサポ - ご要望一覧';
 include './admin-header.php';
 ?>
 <!-- Table Section -->
