@@ -4,3 +4,5 @@ node_modules
 .production.env
 
 
+.vscode/launch.json
+.vscode/settings.json
