@@ -5,13 +5,13 @@
  * 文字入力タイピングのインターバル
  * @type {number}
  */
-const TYPE_INTERVAL_MS = 60;
+const TYPE_INTERVAL_MS = 30;
 
 /**
  * ボタン表示のインターバル
  * @type {number}
  */
-const BUTTON_DISP_INTERVAL_MS = 200;
+const BUTTON_DISP_INTERVAL_MS = 120;
 
 /**
  * 初期表示内容
